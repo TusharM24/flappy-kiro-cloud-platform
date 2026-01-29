@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flappy Kiro - Live Demo</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            font-size: 3em;
+            margin: 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        
+        .header p {
+            font-size: 1.2em;
+            margin: 10px 0;
+            opacity: 0.9;
+        }
+        
+        .demo-notice {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 800px;
+            text-align: center;
+        }
+        
+        .demo-notice h3 {
+            margin-top: 0;
+            color: #FFD700;
+        }
+        
+        .game-container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin: 30px 0;
+        }
+        
+        .game-area {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+        }
+        
+        #gameCanvas {
+            border: 3px solid #fff;
+            border-radius: 10px;
+            background: #87CEEB;
+            display: block;
+        }
+        
+        .controls {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            min-width: 250px;
+        }
+        
+        .controls h3 {
+            margin-top: 0;
+            color: #FFD700;
+        }
+        
+        .control-group {
+            margin: 15px 0;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        select, button {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        
+        button {
+            background: #4CAF50;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        
+        button:hover {
+            background: #45a049;
+        }
+        
+        .score-display {
+            font-size: 1.5em;
+            font-weight: bold;
+            text-align: center;
+            margin: 10px 0;
+            color: #FFD700;
+        }
+        
+        .instructions {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .instructions h4 {
+            margin-top: 0;
+            color: #FFD700;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.8);
+        }
+        
+        .modal-content {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 15% auto;
+            padding: 30px;
+            border-radius: 15px;
+            width: 80%;
+            max-width: 400px;
+            text-align: center;
+            color: white;
+        }
+        
+        .modal input {
+            width: 80%;
+            padding: 10px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .close:hover {
+            color: white;
+        }
+        
+        .architecture-link {
+            text-align: center;
+            margin: 30px 0;
+        }
+        
+        .architecture-link a {
+            color: #FFD700;
+            text-decoration: none;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+        
+        .architecture-link a:hover {
+            text-decoration: underline;
+        }
+        
+        .tech-stack {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+        
+        .tech-badge {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+        
+        @media (max-width: 768px) {
+            .game-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            #gameCanvas {
+                width: 100%;
+                max-width: 400px;
+                height: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🎮 Flappy Kiro</h1>
+        <p>Enterprise Cloud Gaming Platform - Live Demo</p>
+        <div class="tech-stack">
+            <span class="tech-badge">Kubernetes</span>
+            <span class="tech-badge">AWS EKS</span>
+            <span class="tech-badge">Docker</span>
+            <span class="tech-badge">Microservices</span>
+            <span class="tech-badge">DevOps</span>
+        </div>
+    </div>
+    
+    <div class="demo-notice">
+        <h3>🚀 Live Frontend Demo</h3>
+        <p>This is the <strong>frontend microservice</strong> running standalone on GitHub Pages.</p>
+        <p>In production, this connects to a <strong>Python Flask backend</strong> running on <strong>Kubernetes</strong> with comprehensive monitoring.</p>
+        <div class="architecture-link">
+            <a href="../README.md" target="_blank">📋 View Full Architecture & Documentation</a>
+        </div>
+    </div>
+    
+    <div class="game-container">
+        <div class="game-area">
+            <canvas id="gameCanvas" width="600" height="400"></canvas>
+        </div>
+        
+        <div class="controls">
+            <h3>🎮 Game Controls</h3>
+            
+            <div class="control-group">
+                <label for="difficulty">Difficulty Level:</label>
+                <select id="difficulty">
+                    <option value="Easy">Easy</option>
+                    <option value="Medium">Medium</option>
+                    <option value="Hard">Hard</option>
+                </select>
+            </div>
+            
+            <button onclick="startGame()">Start Game</button>
+            
+            <div class="score-display">
+                Score: <span id="currentScore">0</span>
+            </div>
+            
+            <div class="instructions">
+                <h4>How to Play:</h4>
+                <ul style="text-align: left; padding-left: 20px;">
+                    <li>Press <strong>SPACEBAR</strong> to jump</li>
+                    <li>Avoid walls and ground</li>
+                    <li>Each wall passed = 1 point</li>
+                    <li>Try all difficulty levels!</li>
+                </ul>
+            </div>
+            
+            <div class="instructions">
+                <h4>🏗️ Production Features:</h4>
+                <ul style="text-align: left; padding-left: 20px;">
+                    <li>Kubernetes orchestration</li>
+                    <li>Load balancer integration</li>
+                    <li>Comprehensive monitoring</li>
+                    <li>Auto-scaling capabilities</li>
+                    <li>Production-ready logging</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Game Over Modal -->
+    <div id="gameOverModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>🎮 Game Over!</h2>
+            <p>Final Score: <span id="finalScore">0</span></p>
+            <p>Difficulty: <span id="finalDifficulty">Easy</span></p>
+            <p><em>In production, scores are saved to the backend API and stored in the leaderboard!</em></p>
+            <button onclick="closeModal()">Play Again</button>
+        </div>
+    </div>
+    
+    <script>
+        // Standalone version of Flappy Kiro for GitHub Pages demo
+        
+        // Game configuration
+        const GAME_CONFIG = {
+            Easy: { gravity: 0.3, jumpPower: -6, wallSpeed: 2, wallGap: 200 },
+            Medium: { gravity: 0.4, jumpPower: -7, wallSpeed: 3, wallGap: 180 },
+            Hard: { gravity: 0.5, jumpPower: -8, wallSpeed: 4, wallGap: 160 }
+        };
+        
+        // Game state
+        let game = {
+            canvas: null,
+            ctx: null,
+            ghosty: { x: 100, y: 300, width: 40, height: 40, velocity: 0 },
+            walls: [],
+            score: 0,
+            gameRunning: false,
+            difficulty: 'Easy',
+            config: GAME_CONFIG.Easy
+        };
+        
+        // Initialize game
+        function initGame() {
+            game.canvas = document.getElementById('gameCanvas');
+            game.ctx = game.canvas.getContext('2d');
+            
+            // Event listeners
+            document.addEventListener('keydown', handleKeyPress);
+            
+            console.log('🎮 Flappy Kiro Demo initialized - Frontend microservice running on GitHub Pages');
+        }
+        
+        function handleKeyPress(event) {
+            if (event.code === 'Space' && game.gameRunning) {
+                event.preventDefault();
+                jump();
+            }
+        }
+        
+        function jump() {
+            game.ghosty.velocity = game.config.jumpPower;
+        }
+        
+        function startGame() {
+            game.difficulty = document.getElementById('difficulty').value;
+            game.config = GAME_CONFIG[game.difficulty];
+            
+            // Reset game state
+            game.ghosty = { x: 100, y: 300, width: 40, height: 40, velocity: 0 };
+            game.walls = [];
+            game.score = 0;
+            game.gameRunning = true;
+            
+            updateScore();
+            gameLoop();
+        }
+        
+        function gameLoop() {
+            if (!game.gameRunning) return;
+            
+            update();
+            draw();
+            requestAnimationFrame(gameLoop);
+        }
+        
+        function update() {
+            // Update Ghosty physics
+            game.ghosty.velocity += game.config.gravity;
+            game.ghosty.y += game.ghosty.velocity;
+            
+            // Check ground collision
+            if (game.ghosty.y + game.ghosty.height >= game.canvas.height) {
+                endGame('Ground collision');
+                return;
+            }
+            
+            // Check ceiling collision
+            if (game.ghosty.y <= 0) {
+                endGame('Ceiling collision');
+                return;
+            }
+            
+            // Update walls
+            updateWalls();
+            
+            // Check wall collisions
+            checkCollisions();
+        }
+        
+        function updateWalls() {
+            // Move existing walls
+            for (let wall of game.walls) {
+                wall.x -= game.config.wallSpeed;
+            }
+            
+            // Remove off-screen walls and update score
+            game.walls = game.walls.filter(wall => {
+                if (wall.x + wall.width < 0) {
+                    if (!wall.scored) {
+                        game.score++;
+                        updateScore();
+                    }
+                    return false;
+                }
+                return true;
+            });
+            
+            // Add new walls
+            if (game.walls.length === 0 || game.walls[game.walls.length - 1].x < game.canvas.width - 300) {
+                addWall();
+            }
+        }
+        
+        function addWall() {
+            const gapY = Math.random() * (game.canvas.height - game.config.wallGap - 100) + 50;
+            
+            game.walls.push({
+                x: game.canvas.width,
+                topHeight: gapY,
+                bottomY: gapY + game.config.wallGap,
+                bottomHeight: game.canvas.height - (gapY + game.config.wallGap),
+                width: 60,
+                scored: false
+            });
+        }
+        
+        function checkCollisions() {
+            for (let wall of game.walls) {
+                // Check if Ghosty is in wall's x range
+                if (game.ghosty.x < wall.x + wall.width && 
+                    game.ghosty.x + game.ghosty.width > wall.x) {
+                    
+                    // Check collision with top or bottom wall
+                    if (game.ghosty.y < wall.topHeight || 
+                        game.ghosty.y + game.ghosty.height > wall.bottomY) {
+                        endGame('Wall collision');
+                        return;
+                    }
+                    
+                    // Mark wall as scored if Ghosty passes through
+                    if (!wall.scored && game.ghosty.x > wall.x + wall.width) {
+                        wall.scored = true;
+                    }
+                }
+            }
+        }
+        
+        function draw() {
+            // Clear canvas
+            game.ctx.fillStyle = '#87CEEB';
+            game.ctx.fillRect(0, 0, game.canvas.width, game.canvas.height);
+            
+            // Draw Ghosty (simple ghost shape)
+            drawGhosty();
+            
+            // Draw walls
+            game.ctx.fillStyle = '#228B22';
+            for (let wall of game.walls) {
+                // Top wall
+                game.ctx.fillRect(wall.x, 0, wall.width, wall.topHeight);
+                // Bottom wall
+                game.ctx.fillRect(wall.x, wall.bottomY, wall.width, wall.bottomHeight);
+            }
+        }
+        
+        function drawGhosty() {
+            const ctx = game.ctx;
+            const x = game.ghosty.x;
+            const y = game.ghosty.y;
+            const w = game.ghosty.width;
+            const h = game.ghosty.height;
+            
+            // Draw ghost body (white circle)
+            ctx.fillStyle = 'white';
+            ctx.beginPath();
+            ctx.arc(x + w/2, y + h/2, w/2, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Draw eyes
+            ctx.fillStyle = 'black';
+            ctx.beginPath();
+            ctx.arc(x + w/3, y + h/3, 4, 0, Math.PI * 2);
+            ctx.arc(x + 2*w/3, y + h/3, 4, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Draw mouth
+            ctx.beginPath();
+            ctx.arc(x + w/2, y + 2*h/3, 6, 0, Math.PI);
+            ctx.stroke();
+        }
+        
+        function updateScore() {
+            document.getElementById('currentScore').textContent = game.score;
+        }
+        
+        function endGame(reason) {
+            game.gameRunning = false;
+            
+            // Show game over modal
+            document.getElementById('finalScore').textContent = game.score;
+            document.getElementById('finalDifficulty').textContent = game.difficulty;
+            document.getElementById('gameOverModal').style.display = 'block';
+        }
+        
+        function closeModal() {
+            document.getElementById('gameOverModal').style.display = 'none';
+        }
+        
+        // Initialize when page loads
+        window.addEventListener('load', initGame);
+    </script>
+</body>
+</html>

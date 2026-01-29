@@ -1,0 +1,30 @@
+# GitHub Pages configuration for Flappy Kiro Cloud Platform
+theme: jekyll-theme-minimal
+title: Flappy Kiro Cloud Platform
+description: Enterprise cloud gaming platform demonstrating Kubernetes, AWS, and DevOps best practices
+show_downloads: true
+google_analytics: # Add your GA tracking ID if you have one
+
+# Custom navigation
+navigation:
+  - title: "Live Demo"
+    url: "/docs/"
+  - title: "Documentation"
+    url: "/docs/COMPLETE_PROJECT_DOCUMENTATION.html"
+  - title: "Architecture Guide"
+    url: "/docs/SIMPLE_ARCHITECTURE_GUIDE.html"
+
+# SEO and social media
+author: "Your Name"
+twitter:
+  username: # your twitter username
+  card: summary_large_image
+
+# GitHub repository info
+repository: yourusername/flappy-kiro-cloud-platform
+
+# Enable GitHub Pages features
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+  - jekyll-seo-tag

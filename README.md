@@ -166,6 +166,25 @@ curl -X POST "https://api.edgedelta.com/v1/orgs/${ORG_ID}/monitors" \
 | Pod Startup Time | <30s | ~15s |
 | Error Rate | <1% | <0.1% |
 
+## 🎮 Live Demo
+
+**🚀 Play Now**: [Flappy Kiro Live Demo](https://yourusername.github.io/flappy-kiro-cloud-platform/)
+
+> **Frontend microservice** running on GitHub Pages. In production, this connects to a **Kubernetes backend** with comprehensive monitoring, auto-scaling, and enterprise-grade infrastructure.
+
+**What the demo shows:**
+- ✅ Game functionality with 3 difficulty levels
+- ✅ Responsive HTML5 Canvas graphics
+- ✅ Production-ready frontend code
+- ✅ Mobile-responsive design
+
+**What runs in production:**
+- ✅ Kubernetes orchestration (24+ pods)
+- ✅ AWS Load Balancer integration
+- ✅ Comprehensive monitoring (11 monitors)
+- ✅ Auto-scaling and high availability
+- ✅ Backend API with persistent storage
+
 ## 🚀 Quick Start
 
 ### Prerequisites
