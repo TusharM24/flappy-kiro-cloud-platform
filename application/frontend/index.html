@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flappy Kiro - Kubernetes Edition</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .game-container {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+        }
+        
+        h1 {
+            color: white;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        
+        .k8s-badge {
+            background: #326ce5;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+        
+        canvas {
+            border: 3px solid white;
+            border-radius: 10px;
+            background: #87CEEB;
+        }
+        
+        .controls {
+            margin: 20px 0;
+            color: white;
+        }
+        
+        .difficulty-selector, .leaderboard {
+            margin: 15px 0;
+            color: white;
+        }
+        
+        select, button, input {
+            padding: 10px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        
+        button {
+            background: #4CAF50;
+            color: white;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        button:hover {
+            background: #45a049;
+        }
+        
+        .score-display {
+            color: white;
+            font-size: 24px;
+            margin: 10px 0;
+        }
+        
+        .leaderboard-list {
+            background: rgba(0,0,0,0.3);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .score-entry {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .game-over-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+        }
+        
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+        }
+        
+        .status-bar {
+            background: rgba(0,0,0,0.2);
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1>🎮 Flappy Kiro <span class="k8s-badge">☸️ K8s</span></h1>
+        
+        <div class="status-bar">
+            <div>Frontend Pod: <span id="podInfo">Loading...</span></div>
+            <div>Backend Status: <span id="backendStatus">Checking...</span></div>
+        </div>
+        
+        <div class="difficulty-selector">
+            <label for="difficulty">Difficulty:</label>
+            <select id="difficulty">
+                <option value="Easy">Easy</option>
+                <option value="Medium">Medium</option>
+                <option value="Hard">Hard</option>
+            </select>
+        </div>
+        
+        <canvas id="gameCanvas" width="800" height="600"></canvas>
+        
+        <div class="controls">
+            <p>Press SPACEBAR to make Ghosty fly!</p>
+            <button onclick="startGame()">Start Game</button>
+            <button onclick="loadLeaderboard()">Refresh Leaderboard</button>
+        </div>
+        
+        <div class="score-display">
+            Score: <span id="currentScore">0</span>
+        </div>
+        
+        <div class="leaderboard">
+            <h3>🏆 Global Leaderboard</h3>
+            <div id="leaderboardList" class="leaderboard-list">
+                Loading...
+            </div>
+        </div>
+    </div>
+    
+    <!-- Game Over Modal -->
+    <div id="gameOverModal" class="game-over-modal">
+        <div class="modal-content">
+            <h2>Game Over!</h2>
+            <p>Final Score: <span id="finalScore">0</span></p>
+            <p>Difficulty: <span id="finalDifficulty">Easy</span></p>
+            <div>
+                <input type="text" id="usernameInput" placeholder="Enter username" maxlength="20">
+                <br><br>
+                <button onclick="submitScore()">Submit Score</button>
+                <button onclick="closeModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>

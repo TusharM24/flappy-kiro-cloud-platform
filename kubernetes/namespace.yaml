@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: flappy-kiro
+  labels:
+    app: flappy-kiro
+    version: v1.0.0
